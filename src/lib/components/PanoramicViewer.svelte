@@ -224,6 +224,10 @@ const panoramaImageCache = new Map();
         }
 
         const img = new Image();
+        const isRemote = /^https?:\/\//.test(imageUrl) && !imageUrl.startsWith(window.location.origin);
+        if (isRemote) {
+          img.crossOrigin = 'anonymous';
+        }
         img.onload = () => {
           panoramaImageCache.set(imageUrl, true);
           loadedCount += 1;
@@ -232,6 +236,8 @@ const panoramaImageCache = new Map();
         };
 
         img.onerror = () => {
+          loadedCount += 1;
+          updateProgress();
           reject(new Error(`Failed to preload scene "${sceneKey}".`));
         };
 
@@ -243,8 +249,11 @@ const panoramaImageCache = new Map();
       });
     };
 
-    for (const [sceneKey, imageUrl] of sceneEntries) {
-      await loadImage(sceneKey, imageUrl);
+    const loadPromises = sceneEntries.map(([sceneKey, imageUrl]) => loadImage(sceneKey, imageUrl));
+    const results = await Promise.allSettled(loadPromises);
+    const failedLoads = results.filter(result => result.status === 'rejected');
+    if (failedLoads.length > 0) {
+      console.warn('[PanoramicViewer] Some scenes failed to preload:', failedLoads.map(f => f.reason?.message || f.reason));
     }
   };
 
@@ -256,16 +265,13 @@ const panoramaImageCache = new Map();
       error = null;
 
       // Load Pannellum library
-      await loadPannellum();
-      loadingProgress = 40;
-
       const sceneEntries = Object.entries(resolvedPanoramicData);
       if (sceneEntries.length === 0) {
         throw new Error('No panoramic scenes available');
       }
 
-      await preloadPanoramicImages(sceneEntries);
-      loadingProgress = Math.max(60, loadingProgress);
+      await Promise.all([loadPannellum(), preloadPanoramicImages(sceneEntries)]);
+      loadingProgress = Math.max(55, loadingProgress);
 
       // Create scenes configuration
       const scenes = {};
@@ -292,10 +298,12 @@ const panoramaImageCache = new Map();
           };
         }) : [];
 
-        scenes[sceneKey] = {
+        const isRemote = /^https?:\/\//.test(imageUrl) && !imageUrl.startsWith(window.location.origin);
+
+        const sceneConfig = {
           type: 'equirectangular',
           panorama: imageUrl,
-          autoLoad: sceneKey === currentScene,
+          autoLoad: false,
           hotSpots: pannellumHotspots,
           title: sceneNames[sceneKey] || sceneKey,
           author: '2WATUJU Architecture',
@@ -304,6 +312,12 @@ const panoramaImageCache = new Map();
           yaw: 0,
           hotSpotDebug: false
         };
+
+        if (isRemote) {
+          sceneConfig.crossOrigin = 'anonymous';
+        }
+
+        scenes[sceneKey] = sceneConfig;
       }
 
       loadingProgress = Math.max(70, loadingProgress + 5);
@@ -313,7 +327,7 @@ const panoramaImageCache = new Map();
         currentScene = sceneKeys[0];
       }
 
-      loadingProgress = Math.max(85, loadingProgress + 5);
+      loadingProgress = Math.max(92, loadingProgress + 5);
 
       // Clear container
       if (pannellumContainer) {
@@ -352,7 +366,9 @@ const panoramaImageCache = new Map();
           error = 'Load timeout: The panoramic viewer took too long to initialize. Please check your internet connection and try again.';
           isLoading = false;
         }
-      }, 20000);
+      }, 35000);
+
+      loadingProgress = Math.max(95, loadingProgress);
 
       viewer = window.pannellum.viewer(pannellumContainer, config);
 
@@ -361,6 +377,11 @@ const panoramaImageCache = new Map();
         clearTimeout(loadTimeout);
         loadingProgress = 100;
         isLoading = false;
+        try {
+          viewer.resize();
+        } catch (resizeErr) {
+          console.warn('[PanoramicViewer] resize failed:', resizeErr);
+        }
       });
 
       viewer.on('error', (err) => {
@@ -374,6 +395,13 @@ const panoramaImageCache = new Map();
         currentScene = sceneId;
         mobileMenuOpen = false; // Close menu after scene change
       });
+
+      // Force initial scene load (with no transition)
+      try {
+        viewer.loadScene(currentScene, null, 0);
+      } catch (sceneErr) {
+        console.error('[PanoramicViewer] Initial scene load failed:', sceneErr);
+      }
 
       if (autoRotate) {
         viewer.setAutoRotate(2);
