@@ -50,82 +50,26 @@ export const projects = [
       }
     ],
     "panoramic": {
-      "outside": "https://dafahan.github.io/2Watuju/assets/panorama/2.webp",
-      "courtyard": "https://dafahan.github.io/2Watuju/assets/panorama/5.webp",
-      "bedroom": "https://dafahan.github.io/2Watuju/assets/panorama/3.webp",
-      "terrace": "https://dafahan.github.io/2Watuju/assets/panorama/4.webp"
+      "scene1": "https://raw.githubusercontent.com/dafahan/2Watuju/9ff39b3876143dc036c8f8f36121f057dd1fe1ec/static/assets/panorama/Fin%20H/Panorama_R.DR%20FIN%201%20(1)2_2025-07-26-15-44-36.webp",
+      "scene2": "https://raw.githubusercontent.com/dafahan/2Watuju/9ff39b3876143dc036c8f8f36121f057dd1fe1ec/static/assets/panorama/Fin%20H/Panorama_R.DR%20FIN%201%20(1)2_2025-07-26-16-12-06.webp"
     },
     "hotspots": [
       {
-        "x": 79.02,
-        "y": 51.94,
-        "scene": "outside",
-        "label": "Enter House",
+        "x": 82.04,
+        "y": 44.6,
+        "scene": "scene1",
+        "label": "Scene 2",
         "type": "nav",
-        "targetScene": "courtyard",
+        "targetScene": "scene2",
         "icon": "door"
       },
       {
-        "x": 53.86,
-        "y": 49.99,
-        "scene": "courtyard",
-        "label": "Leave House",
+        "x": 40.18,
+        "y": 62.37,
+        "scene": "scene2",
+        "label": "Scene 1",
         "type": "nav",
-        "targetScene": "outside",
-        "icon": "door"
-      },
-      {
-        "x": 72.43,
-        "y": 46.25,
-        "scene": "courtyard",
-        "label": "Terrace",
-        "type": "nav",
-        "targetScene": "terrace",
-        "icon": "door"
-      },
-      {
-        "x": 80.46,
-        "y": 48.1,
-        "scene": "courtyard",
-        "label": "Bedroom",
-        "type": "nav",
-        "targetScene": "bedroom",
-        "icon": "door"
-      },
-      {
-        "x": 62.42,
-        "y": 50,
-        "scene": "bedroom",
-        "label": "Terrace",
-        "type": "nav",
-        "targetScene": "terrace",
-        "icon": "door"
-      },
-      {
-        "x": 12.92,
-        "y": 48.23,
-        "scene": "bedroom",
-        "label": "Courtyard",
-        "type": "nav",
-        "targetScene": "courtyard",
-        "icon": "door"
-      },
-      {
-        "x": 73.8,
-        "y": 51.95,
-        "scene": "terrace",
-        "label": "Bedroom",
-        "type": "nav",
-        "targetScene": "bedroom",
-        "icon": "door"
-      },
-      {
-        "x": 3.31,
-        "y": 47.37,
-        "scene": "terrace",
-        "label": "Courtyard",
-        "type": "nav",
-        "targetScene": "courtyard",
+        "targetScene": "scene1",
         "icon": "door"
       }
     ],
@@ -1141,11 +1085,43 @@ export const projects = [
         "value": "Kurnia Firmanda Ageng, S.Ars",
         "order": 4
       }
+    },
+    "hotspots": [
+      {
+        "x": 76.88,
+        "y": 50.53,
+        "scene": "scene1",
+        "label": "Scene 2",
+        "type": "nav",
+        "targetScene": "scene2",
+        "icon": "door"
+      },
+      {
+        "x": 73.27,
+        "y": 50.01,
+        "scene": "scene2",
+        "label": "Scene 1",
+        "type": "nav",
+        "targetScene": "scene1",
+        "icon": "door"
+      }
+    ],
+    "panoramic": {
+      "scene1": "https://raw.githubusercontent.com/dafahan/2Watuju/refs/heads/main/static/assets/panorama/Dahlia/Panorama_RDH%20v2_2025-08-04-10-45-26.webp",
+      "scene2": "https://raw.githubusercontent.com/dafahan/2Watuju/refs/heads/main/static/assets/panorama/Dahlia/Panorama_RDH%20v2_2025-08-04-11-03-52.webp"
     }
   }
 ];
 
-// ... rest of the helper functions
+
+
+
+/* -------------------------------------------------- */
+/* BATAS PASTE                                        */
+/* -------------------------------------------------- */
+
+
+
 
 export const projectStatuses = {
   planning: 'Perencanaan',
