@@ -336,7 +336,7 @@
     <div class=" mx-auto px-4 xl:px-32 2xl:px-64 px-4 sm:px-8 py-12 lg:py-16 ">
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
         <!-- Left Column - Company Info -->
-        <div class="lg:col-span-6 space-y-6">
+        <div class="lg:col-span-6 space-y-6 border-b-2 border-b-neutral-200 pb-6 lg:pb-0 lg:border-b-0">
           <!-- Logo Section -->
           <div class="flex items-start space-x-4 group">
             <div class="w-28 h-28 bg-white rounded-xl p-3 flex-shrink-0  group-hover:scale-105 border border-none">

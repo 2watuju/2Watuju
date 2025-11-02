@@ -45,12 +45,12 @@
 
   function handleViewAllProjects() {
     console.log('View all projects clicked');
-    goto('/projects');
+    goto(`${base}/projects`);
   }
 
   function handleProjectClick(projectId) {
     console.log('Project clicked:', projectId);
-    goto(`/projects/${projectId}`);
+    goto(`${base}/projects/${projectId}`);
   }
 
   function handleTouchStart(event) {
@@ -153,13 +153,13 @@
         
         <!-- UPDATED: Dynamic Project Details Grid -->
         {#each chunkArray(orderedProjectDetails, 2) as chunk}
-          <div class="flex w-full justify-between"> <!-- Row container -->
+          <div class="flex w-full flex-col gap-6 sm:flex-row sm:justify-between sm:gap-8"> <!-- Row container -->
             {#each chunk as detail}
-              <div class="flex w-fit flex-col">
-                <h1 class="uppercase font-bold text-3xl">
+              <div class="flex flex-col w-full sm:w-fit">
+                <h1 class="uppercase font-bold text-xl sm:text-3xl">
                   {detail.label}
                 </h1>
-                <h2 class="text-xl">
+                <h2 class="text-base sm:text-xl">
                   {detail.value}
                 </h2>
               </div>
@@ -167,7 +167,7 @@
             
             <!-- Fill empty space if odd number of items -->
             {#if chunk.length === 1}
-              <div class="flex w-fit flex-col"></div>
+              <div class="hidden sm:flex w-fit flex-col"></div>
             {/if}
           </div>
         {/each}
@@ -176,10 +176,10 @@
         {#if orderedStats.length > 0}
           <div class="w-full pt-6 sm:pt-8 mt-6 sm:mt-8">
             <!-- Responsive grid for stats - Using dynamic chunks of 2 for mobile, 3 for desktop -->
-            <div class="flex w-full justify-between">
+            <div class="flex w-full flex-col gap-6 sm:flex-row sm:justify-between">
               <!-- Create 3 columns dynamically -->
               {#each chunkArray(orderedStats, Math.ceil(orderedStats.length / 3)) as column, columnIndex}
-                <div class="flex flex-col gap-6">
+                <div class="flex flex-col gap-6 w-full sm:w-auto">
                   {#each column as stat}
                     <div class="flex flex-row items-center justify-start gap-3">
                       <div class="w-16 h-16 flex items-center justify-center flex-shrink-0">
@@ -194,8 +194,8 @@
                         >
                       </div>
                       <div class="flex flex-col font-roboto-mono">
-                        <h1 class="font-bold text-lg leading-tight">{stat.label}</h1>
-                        <h2 class="font-normal text-base">{stat.value}</h2>
+                        <h1 class="font-bold text-base sm:text-lg leading-tight">{stat.label}</h1>
+                        <h2 class="font-normal text-sm sm:text-base">{stat.value}</h2>
                       </div>
                     </div>
                   {/each}

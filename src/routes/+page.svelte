@@ -324,10 +324,10 @@
 <!-- Main content container -->
 <div class="mx-auto overflow-x-hidden">
   <!-- Hero Section with immediate image visibility -->
-  <section class="hero-critical h-[90vh] xl:min-h-screen 2xl:px-64 pt-24 md:pt-12 pb-12 md:pb-24 flex justify-start items-center xl:justify-center flex-col relative w-full transition-all duration-300">
+  <section class="hero-critical min-h-[78vh] sm:min-h-[85vh] xl:min-h-screen 2xl:px-64 pt-20 sm:pt-24 md:pt-12 pb-12 md:pb-24 flex justify-start items-center xl:justify-center flex-col relative w-full transition-all duration-300 px-4 sm:px-6 md:px-8">
     
     <!-- Image Container - Simplified, no layering -->
-    <div class="hero-image-container w-full md:max-w-7xl xl:max-w-none hero-image">
+    <div class="hero-image-container w-full max-w-[420px] sm:max-w-3xl md:max-w-5xl xl:max-w-none hero-image mx-auto">
       <!-- Main Image - Direct render, no placeholder -->
       <picture>
         <!-- Mobile screens -->
@@ -361,7 +361,7 @@
         <img 
           src="{base}/images/hero-desktop-1200.webp" 
           alt="2WATUJU Architecture Hero" 
-          class="object-contain w-full"
+          class="object-contain w-full max-h-[60vh] sm:max-h-none"
           loading="eager"
           fetchpriority="high"
           decoding="async"
@@ -372,30 +372,30 @@
     </div>
     
     <!-- Buttons with better loading state -->
-    <div class="hero-buttons flex w-full justify-center items-center gap-8 sm:gap-16 lg:gap-24 px-4 mt-8" style="min-height: 6rem;">
+    <div class="hero-buttons flex w-full flex-col sm:flex-row justify-center items-stretch sm:items-center gap-6 sm:gap-16 lg:gap-24 px-2 sm:px-4 mt-10 sm:mt-12" style="min-height: 6rem;">
       <a 
-        class="flex cursor-pointer font-roboto-condensed text-white gap-4 sm:gap-6 items-center group p-2 rounded-lg transition-transform duration-200 hover:scale-105 touch-interactive"
+        class="flex w-full sm:w-auto cursor-pointer font-roboto-condensed text-white gap-4 sm:gap-6 items-center justify-between sm:justify-start group p-3 sm:p-2 rounded-lg transition-transform duration-200 hover:scale-105 touch-interactive border border-white/20 sm:border-transparent"
           href="#alur"
           >
         <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white text-[#56AAB7] rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:bg-transparent hover:text-white hover:border-2 hover:border-white">
           <ArrowRight class="group-hover:rotate-12 duration-300 w-5 h-5 sm:w-7 sm:h-7" />
         </div>
-        <div class="flex flex-col text-sm sm:text-lg">
+        <div class="flex flex-col text-sm sm:text-lg text-left">
           <span class="font-bold">ALUR KERJA</span>
           <span>PROYEK KITA</span>
         </div>
       </a>
 
       <a href="wh" 
-        class="flex font-roboto-condensed text-white gap-4 sm:gap-6 items-center group p-2 rounded-lg transition-transform duration-200 hover:scale-105 touch-interactive"
+        class="flex w-full sm:w-auto font-roboto-condensed text-white gap-4 sm:gap-6 items-center justify-between sm:justify-start group p-3 sm:p-2 rounded-lg transition-transform duration-200 hover:scale-105 touch-interactive border border-white/20 sm:border-transparent"
         on:click={handleConsultationClick}
         on:touchstart={handleTouchStart}
         on:touchend={handleTouchEnd}>
         <div class="w-12 h-12 sm:w-14 sm:h-14 bg-white text-[#56AAB7] rounded-full flex items-center justify-center shadow-lg transition-all duration-300 hover:bg-transparent hover:text-white hover:border-2 hover:border-white">
           <ArrowRight class="group-hover:rotate-12 duration-300 w-5 h-5 sm:w-7 sm:h-7" />
         </div>
-        <div class="flex flex-col text-sm sm:text-lg">
-          <span>JADWALKAN</span>
+        <div class="flex flex-col text-sm sm:text-lg text-left">
+            <span>JADWALKAN</span>
           <span class="font-bold">KONSULTASI</span>
         </div>
       </a>
