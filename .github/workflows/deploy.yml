@@ -4,9 +4,15 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
+
+# Biar nggak "deployment in progress" — auto-cancel run yang lama
+concurrency:
+  group: gh-pages-deploy
+  cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: write  # perlu untuk push ke branch gh-pages
 
 jobs:
   deploy:
@@ -19,15 +25,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build
         run: npm run build
 
-      - name: Deploy
+      - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
+          publish_dir: ./build           # sesuaikan kalau output-mu beda
+          # publish_branch: gh-pages     # opsional (default: gh-pages)
+          # cname: example.com           # opsional: kalau pakai custom domain
