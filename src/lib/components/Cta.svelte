@@ -1,6 +1,9 @@
 <script lang="ts">
   import { ArrowRight } from 'lucide-svelte';
+  import { whatsappCTA } from '$lib/data/company.js';
   export let className = '';
+
+  const whatsappHref = `https://wa.me/${whatsappCTA.waNumber}?text=${encodeURIComponent(whatsappCTA.defaultMessage)}`;
 
 </script>
 
@@ -47,7 +50,7 @@
           
           <!-- Main button -->
           <a 
-            href="https://wa.me/6281234567890?text=Saya%20tertarik%20untuk%20berkolaborasi%20dengan%20tim%202Watuju!" 
+            href={whatsappHref}
             class="relative z-10 flex items-center justify-center w-20 h-20 lg:w-24 lg:h-24 rounded-full bg-white hover:bg-[#56AAB7] border-4 border-transparent hover:border-white transition-all duration-300 ease-out transform hover:scale-110 hover:rotate-12 group/arrow shadow-lg hover:shadow-2xl"
             aria-label="Start Collaboration"
           >

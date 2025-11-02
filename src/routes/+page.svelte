@@ -10,6 +10,7 @@
   // Components
   import FeaturedProjects from '$lib/components/FeaturedProjects.svelte';
   import Cta from "$lib/components/Cta.svelte";
+  import { testimonials } from '$lib/data/testimonials.js';
   
   // Register GSAP plugins
   gsap.registerPlugin(ScrollTrigger);
@@ -18,37 +19,6 @@
   let touchStates = new Map();
 
   // Testimonials data
-  const testimonials = [
-    {
-      text: "Tim 2WATUJU benar-benar memahami visi kami. Mereka tidak hanya merancang rumah, tapi menciptakan rumah impian yang sesuai dengan gaya hidup keluarga kami. Hasilnya melebihi ekspektasi!",
-      name: "RIFKI HAWARI",
-      role: "PENGUSAHA",
-      initials: "RH",
-      position: "right"
-    },
-    {
-      text: "Proses kolaborasi dengan 2WATUJU sangat menyenangkan. Mereka mendengarkan setiap detail kebutuhan kami dan menghadirkan solusi arsitektur yang cerdas dan fungsional untuk praktik medis saya.",
-      name: "DR. AMANDA SARI",
-      role: "DOKTER SPESIALIS",
-      initials: "AS",
-      position: "right"
-    },
-    {
-      text: "Sebagai pengusaha lokal, saya sangat mengapresiasi pendekatan 2WATUJU yang mengintegrasikan nilai-nilai budaya Lampung dalam desain modern. Rumah kami menjadi kebanggaan keluarga.",
-      name: "BUDI TANOTO",
-      role: "WIRASWASTA",
-      initials: "BT",
-      position: "right"
-    },
-    {
-      text: "Rumah yang dirancang 2WATUJU tidak hanya cantik secara visual, tapi juga sangat nyaman untuk aktivitas sehari-hari. Setiap sudut rumah memiliki fungsi yang optimal untuk keluarga kami.",
-      name: "LINDA MARIA",
-      role: "EDUCATOR",
-      initials: "LM",
-      position: "right"
-    }
-  ];
-
   onMount(() => {
     // Delay animations until fonts are loaded
     if (document.fonts) {
@@ -659,9 +629,18 @@
               </p>
             </div>
             <div class="flex items-center gap-4 pt-4 border-t-2 border-gray-100">
-              <div class="w-12 h-12 bg-[#56AAB7] rounded-full flex items-center justify-center text-white font-bold text-base flex-shrink-0">
-                {testimonial.initials}
-              </div>
+              {#if testimonial.profile}
+                <img
+                  src={testimonial.profile}
+                  alt={testimonial.name}
+                  class="w-12 h-12 rounded-full object-cover flex-shrink-0 border-2 border-[#56AAB7]"
+                  on:error={(e) => e.target.style.display = 'none'}
+                />
+              {:else}
+                <div class="w-12 h-12 bg-[#56AAB7] rounded-full flex items-center justify-center text-white font-bold text-base flex-shrink-0">
+                  {testimonial.initials}
+                </div>
+              {/if}
               <div>
                 <h4 class="font-roboto-mono font-semibold text-[#56AAB7] m-0 text-sm">
                   {testimonial.name}

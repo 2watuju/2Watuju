@@ -3,6 +3,7 @@
     import { fade, fly, scale } from 'svelte/transition';
     import Cta from "$lib/components/Cta.svelte";
     import { base } from '$app/paths';
+    import { teamMembers, contactEntries } from '$lib/data/company.js';
 
     let mounted = false;
     let heroInView = false;
@@ -181,38 +182,16 @@
                 <div class="flex-1">
                     <h3 class="font-roboto text-lg sm:text-xl md:text-2xl lg:text-3xl mb-6 text-gray-800">Tim Kecil Kami :</h3>
                     <div class="space-y-3 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="font-medium text-gray-800">Muhammad Gunawan</span>
-                            <span class="text-gray-600">(Founder & Principle Architect)</span>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="font-medium text-gray-800">Kurnia Ageng Firmanda S. Ars</span>
-                            <span class="text-gray-600">(Architectural & Interior Designer)</span>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="font-medium text-gray-800">Angga Mursandana Nizzu, S.T</span>
-                            <span class="text-gray-600">(Studio & Project Manager)</span>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="font-medium text-gray-800">Muhammad Riwanto</span>
-                            <span class="text-gray-600">(Site Manager)</span>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="font-medium text-gray-800">Pandu Indarno</span>
-                            <span class="text-gray-600">(Junior Designer)</span>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="font-medium text-gray-800">Ahmad Zaldian Marda</span>
-                            <span class="text-gray-600">(Junior Designer)</span>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="font-medium text-gray-800">Iqbal Hadi Wijaya</span>
-                            <span class="text-gray-600">(Drafter & Estimator)</span>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2">
-                            <span class="font-medium text-gray-800">M. Ikhsan Rivaldi</span>
-                            <span class="text-gray-600">(Social Media & Marketing)</span>
-                        </div>
+                        {#each teamMembers as member, index}
+                            <div
+                                class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2"
+                                class:border-b={index < teamMembers.length - 1}
+                                class:border-gray-100={index < teamMembers.length - 1}
+                            >
+                                <span class="font-medium text-gray-800">{member.name}</span>
+                                <span class="text-gray-600">({member.role})</span>
+                            </div>
+                        {/each}
                     </div>
                 </div>
 
@@ -220,51 +199,39 @@
                 <div class="flex-1">
                     <h3 class="font-roboto text-lg sm:text-xl md:text-2xl lg:text-3xl mb-6 text-gray-800">Kontak :</h3>
                     <div class="space-y-3 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl">
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="text-gray-800 flex items-center gap-2">
-                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-2.462-1.091-4.778-3.078-6.563-1.986-1.784-4.504-2.913-7.317-2.913-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.256-.897z"/>
-                                </svg>
-                                WA Business
-                            </span>
-                            <a href="https://wa.me/+6285184480880" class="hover:text-[#56AAB7] transition-colors">0851 8448 0880</a>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="text-gray-800 flex items-center gap-2">
-                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                                </svg>
-                                Instagram
-                            </span>
-                            <a href="https://instagram.com/@2watuju_design" class="hover:text-[#56AAB7] transition-colors">@2watuju_design</a>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="text-gray-800 flex items-center gap-2">
-                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                                </svg>
-                                FB Page
-                            </span>
-                            <a href="https://www.facebook.com/profile.php?id=100065229180631" class="hover:text-[#56AAB7] transition-colors">2Watuju Design</a>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 border-b border-gray-100">
-                            <span class="text-gray-800 flex items-center gap-2">
-                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                                </svg>
-                                Youtube
-                            </span>
-                            <a href="https://www.youtube.com/@2WatujuDesign" class="hover:text-[#56AAB7] transition-colors">2Watuju Design</a>
-                        </div>
-                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2">
-                            <span class="text-gray-800 flex items-center gap-2">
-                                <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.559-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.559.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clip-rule="evenodd"></path>
-                                </svg>
-                                Website
-                            </span>
-                            <a href="http://www.2watujudesign.com/" class="hover:text-[#56AAB7] transition-colors">2watujudesign.com</a>
-                        </div>
+                        {#each contactEntries as entry, index}
+                            <div
+                                class="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2"
+                                class:border-b={index < contactEntries.length - 1}
+                                class:border-gray-100={index < contactEntries.length - 1}
+                            >
+                                <span class="text-gray-800 flex items-center gap-2">
+                                    {#if entry.type === 'whatsapp'}
+                                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-2.462-1.091-4.778-3.078-6.563-1.986-1.784-4.504-2.913-7.317-2.913-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.256-.897z"/>
+                                        </svg>
+                                    {:else if entry.type === 'instagram'}
+                                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                                        </svg>
+                                    {:else if entry.type === 'facebook'}
+                                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                                        </svg>
+                                    {:else if entry.type === 'youtube'}
+                                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                                        </svg>
+                                    {:else if entry.type === 'website'}
+                                        <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                            <path fill-rule="evenodd" d="M4.083 9h1.946c.089-1.546.383-2.97.837-4.118A6.004 6.004 0 004.083 9zM10 2a8 8 0 100 16 8 8 0 000-16zm0 2c-.076 0-.232.032-.465.262-.238.234-.497.623-.737 1.182-.389.907-.673 2.142-.766 3.556h3.936c-.093-1.414-.377-2.649-.766-3.556-.24-.559-.5-.948-.737-1.182C10.232 4.032 10.076 4 10 4zm3.971 5c-.089-1.546-.383-2.97-.837-4.118A6.004 6.004 0 0115.917 9h-1.946zm-2.003 2H8.032c.093 1.414.377 2.649.766 3.556.24.559.5.948.737 1.182.233.23.389.262.465.262.076 0 .232-.032.465-.262.238-.234.498-.623.737-1.182.389-.907.673-2.142.766-3.556zm1.166 4.118c.454-1.147.748-2.572.837-4.118h1.946a6.004 6.004 0 01-2.783 4.118zm-6.268 0C6.412 13.97 6.118 12.546 6.03 11H4.083a6.004 6.004 0 002.783 4.118z" clip-rule="evenodd"></path>
+                                        </svg>
+                                    {/if}
+                                    {entry.label}
+                                </span>
+                                <a href={entry.href} class="hover:text-[#56AAB7] transition-colors">{entry.value}</a>
+                            </div>
+                        {/each}
                     </div>
                 </div>
             </div>

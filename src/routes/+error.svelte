@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
   import { Home, ArrowLeft, Mail, Phone, Compass, AlertTriangle, RefreshCw, Server, Shield } from 'lucide-svelte';
   import { gsap } from 'gsap';
+  import { primaryPhone, emailAddress } from '$lib/data/company.js';
   
   // Check if it's a 404 or other error
   $: is404 = $page.status === 404;
@@ -326,25 +327,25 @@
         <p class="text-sm text-gray-500 mb-4">Need immediate assistance?</p>
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center text-sm">
           <a 
-            href="tel:+6285383839900" 
+            href={primaryPhone.telHref} 
             class="flex items-center gap-2 text-gray-600 transition-colors"
             style="hover:color: {currentConfig.color};"
             onmouseenter={(e) => e.currentTarget.style.color = currentConfig.color}
             onmouseleave={(e) => e.currentTarget.style.color = '#4B5563'}
           >
             <Phone size={16} />
-            <span>0853-8383-9900</span>
+            <span>{primaryPhone.display}</span>
           </a>
           <div class="hidden sm:block w-1 h-1 bg-gray-400 rounded-full"></div>
           <a 
-            href="mailto:2watujudesign@gmail.com" 
+            href={`mailto:${emailAddress}`} 
             class="flex items-center gap-2 text-gray-600 transition-colors"
             style="hover:color: {currentConfig.color};"
             onmouseenter={(e) => e.currentTarget.style.color = currentConfig.color}
             onmouseleave={(e) => e.currentTarget.style.color = '#4B5563'}
           >
             <Mail size={16} />
-            <span>2watujudesign@gmail.com</span>
+            <span>{emailAddress}</span>
           </a>
         </div>
         
