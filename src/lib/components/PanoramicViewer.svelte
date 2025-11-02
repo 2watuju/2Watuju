@@ -1,7 +1,7 @@
 <!-- Clean PannellumPanoramicViewer.svelte -->
 <script>
   import { onMount, onDestroy } from 'svelte';
-  import { Maximize, RotateCcw, Home, Minimize, MousePointer, Eye, ZoomIn, ZoomOut, Compass, Info, Navigation, AlertTriangle,ToggleLeft,ToggleRight } from 'lucide-svelte';
+  import { Maximize, RotateCcw, Home, Minimize, MousePointer, Eye, ZoomIn, ZoomOut, Compass, Info, Navigation, AlertTriangle,ToggleLeft,ToggleRight, Menu, X } from 'lucide-svelte';
   import { base } from '$app/paths';
 
   // Props
@@ -23,69 +23,6 @@
       type: "nav",
       targetScene: "courtyard",
       icon: "door"
-    },
-    {
-      x: 53.86,
-      y: 49.99,
-      scene: "courtyard",
-      label: "Leave House",
-      type: "nav",
-      targetScene: "outside",
-      icon: "door"
-    },
-    {
-      x: 72.43,
-      y: 46.25,
-      scene: "courtyard",
-      label: "Terrace",
-      type: "nav",
-      targetScene: "terrace",
-      icon: "door"
-    },
-    {
-      x: 80.46,
-      y: 48.1,
-      scene: "courtyard",
-      label: "Bedroom",
-      type: "nav",
-      targetScene: "bedroom",
-      icon: "door"
-    },
-    {
-      x: 62.42,
-      y: 50,
-      scene: "bedroom",
-      label: "Terrace",
-      type: "nav",
-      targetScene: "terrace",
-      icon: "door"
-    },
-    {
-      x: 12.92,
-      y: 48.23,
-      scene: "bedroom",
-      label: "Courtyard",
-      type: "nav",
-      targetScene: "courtyard",
-      icon: "door"
-    },
-    {
-      x: 73.8,
-      y: 51.95,
-      scene: "terrace",
-      label: "Bedroom",
-      type: "nav",
-      targetScene: "bedroom",
-      icon: "door"
-    },
-    {
-      x: 3.31,
-      y: 47.37,
-      scene: "terrace",
-      label: "Courtyard",
-      type: "nav",
-      targetScene: "courtyard",
-      icon: "door"
     }
   ];
 
@@ -100,8 +37,10 @@
   let isFullscreen = false;
   let showHotspots = true;
   let showControls = true;
-  let showAllControls = true;
+  let showAllControls = false; // Start with controls hidden on mobile
   let autoRotate = false;
+  let mobileMenuOpen = false;
+  let windowWidth;
 
   // Pannellum viewer instance
   let viewer = null;
@@ -121,6 +60,9 @@
     Object.entries(panoramicData).map(([key, value]) => [key, resolveImagePath(value)])
   );
   $: resolvedThumbnailUrl = resolveImagePath(thumbnailUrl);
+
+  // Check if mobile
+  $: isMobile = windowWidth < 768;
 
   // Scene names
   const sceneNames = {
@@ -180,7 +122,7 @@
   };
 
   // Enhanced hotspot creation function
-function createCustomHotspot(hotSpotDiv, args) {
+  function createCustomHotspot(hotSpotDiv, args) {
     const { label, type, targetSceneKey } = typeof args === 'object' ? args : { label: args, type: 'info', targetSceneKey: '' };
     
     hotSpotDiv.classList.add('custom-tooltip');
@@ -197,7 +139,7 @@ function createCustomHotspot(hotSpotDiv, args) {
     
     if (type === 'nav') {
         iconContainer.innerHTML = `
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <path d="m18 15-6-6-6 6"/>
             </svg>
         `;
@@ -214,7 +156,7 @@ function createCustomHotspot(hotSpotDiv, args) {
         hotSpotDiv.style.cursor = 'pointer';
     } else {
         iconContainer.innerHTML = `
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="10"/>
                 <line x1="12" y1="16" x2="12" y2="12"/>
                 <line x1="12" y1="8" x2="12.01" y2="8"/>
@@ -247,7 +189,7 @@ function createCustomHotspot(hotSpotDiv, args) {
             navigateToScene(targetSceneKey);
         };
     }
-}
+  }
 
   // Get hotspots for current scene
   const getHotspotsForScene = (sceneKey) => {
@@ -301,7 +243,7 @@ function createCustomHotspot(hotSpotDiv, args) {
           hotSpots: pannellumHotspots,
           title: sceneNames[sceneKey] || sceneKey,
           author: '2WATUJU Architecture',
-          hfov: 100,
+          hfov: isMobile ? 110 : 100,
           pitch: 0,
           yaw: 0,
           hotSpotDebug: false
@@ -332,12 +274,12 @@ function createCustomHotspot(hotSpotDiv, args) {
           showZoomCtrl: false,
           showFullscreenCtrl: false,
           showControls: false,
-          mouseZoom: true,
+          mouseZoom: !isMobile,
           doubleClickZoom: true,
           draggable: true,
           keyboardZoom: true,
           friction: 0.15,
-          hfov: 100,
+          hfov: isMobile ? 110 : 100,
           maxHfov: 120,
           minHfov: 50,
           pitch: 0,
@@ -374,6 +316,7 @@ function createCustomHotspot(hotSpotDiv, args) {
 
       viewer.on('scenechange', (sceneId) => {
         currentScene = sceneId;
+        mobileMenuOpen = false; // Close menu after scene change
       });
 
       if (autoRotate) {
@@ -398,7 +341,7 @@ function createCustomHotspot(hotSpotDiv, args) {
     if (viewer) {
       viewer.setPitch(0);
       viewer.setYaw(0);
-      viewer.setHfov(100);
+      viewer.setHfov(isMobile ? 110 : 100);
     }
   };
 
@@ -459,6 +402,10 @@ function createCustomHotspot(hotSpotDiv, args) {
     showAllControls = !showAllControls;
   };
 
+  const toggleMobileMenu = () => {
+    mobileMenuOpen = !mobileMenuOpen;
+  };
+
   const togglePanoramic = () => {
     if (!isPanoramicMode) {
       isPanoramicMode = true;
@@ -479,10 +426,18 @@ function createCustomHotspot(hotSpotDiv, args) {
     error = null;
     currentScene = 'outside';
     autoRotate = false;
+    mobileMenuOpen = false;
     pannellumLoaded = false;
   };
 
   onMount(() => {
+    const handleResize = () => {
+      windowWidth = window.innerWidth;
+    };
+    
+    windowWidth = window.innerWidth;
+    window.addEventListener('resize', handleResize);
+
     const handleFullscreenChange = () => {
       isFullscreen = !!(document.fullscreenElement || document.webkitFullscreenElement);
       
@@ -497,6 +452,7 @@ function createCustomHotspot(hotSpotDiv, args) {
     document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 
     return () => {
+      window.removeEventListener('resize', handleResize);
       document.removeEventListener('fullscreenchange', handleFullscreenChange);
       document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
     };
@@ -515,14 +471,21 @@ function createCustomHotspot(hotSpotDiv, args) {
   {#if isPanoramicMode}
     <style>
       .custom-hotspot {
-        height: 50px;
-        width: 50px;
+        height: 40px;
+        width: 40px;
         border-radius: 50%;
         border: 3px solid white;
         box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+
+      @media (min-width: 768px) {
+        .custom-hotspot {
+          height: 50px;
+          width: 50px;
+        }
       }
       
       .custom-hotspot:hover {
@@ -566,7 +529,12 @@ function createCustomHotspot(hotSpotDiv, args) {
   {/if}
 </svelte:head>
 
-<div bind:this={containerRef} class="relative w-full aspect-video bg-black rounded-lg overflow-hidden shadow-2xl" class:fullscreen={isFullscreen}>
+<div bind:this={containerRef} 
+     class="relative w-full bg-black rounded-lg overflow-hidden shadow-2xl"
+     class:fullscreen={isFullscreen}
+     class:mobile-viewer={isMobile && !isFullscreen}
+     class:desktop-viewer={!isMobile || isFullscreen}>
+  
   <!-- Thumbnail View -->
   {#if !isPanoramicMode}
     <div class="relative w-full h-full group">
@@ -577,36 +545,33 @@ function createCustomHotspot(hotSpotDiv, args) {
       />
       
       <!-- Overlay with project info -->
-      <div class="absolute inset-0" style="background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);">
-        <div class="absolute bottom-0 left-0 right-0 p-8 text-white">
-          <div class="flex justify-between items-end">
-            <div class="space-y-2">
-              <h3 class="text-3xl font-bold font-roboto-condensed tracking-wider leading-tight">
+      <div class="absolute inset-0 overlay-gradient">
+        <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 text-white">
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-3 sm:gap-0">
+            <div class="space-y-1 sm:space-y-2">
+              <h3 class="text-xl sm:text-2xl md:text-3xl font-bold font-roboto-condensed tracking-wider leading-tight">
                 {title}
               </h3>
-              <p class="text-sm font-chivo-mono opacity-90 tracking-wide">
+              <p class="text-xs sm:text-sm font-chivo-mono opacity-90 tracking-wide">
                 {subtitle}
               </p>
-
             </div>
             
             <button 
               on:click={togglePanoramic}
-              class="flex items-center gap-3 text-white px-6 py-3 rounded-full transition-all duration-500 hover:scale-105 shadow-lg"
+              class="flex items-center gap-2 sm:gap-3 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full transition-all duration-500 hover:scale-105 shadow-lg text-sm sm:text-base"
               style="background: linear-gradient(to right, #56AAB7, #4a9aa6);"
               disabled={isLoading}
             >
-              <Eye size={20} />
-              <span class="text-sm font-medium tracking-wide">
+              <Eye size={isMobile ? 16 : 20} />
+              <span class="text-xs sm:text-sm font-medium tracking-wide">
                 {isLoading ? 'Loading...' : 'Explore 360°'}
               </span>
-              <div class="w-2 h-2 rounded-full animate-pulse" style="background-color: rgba(255,255,255,0.3);"></div>
+              <div class="w-2 h-2 rounded-full animate-pulse hidden sm:block" style="background-color: rgba(255,255,255,0.3);"></div>
             </button>
           </div>
         </div>
       </div>
-
-
     </div>
   {:else}
     <!-- Pannellum Panoramic View -->
@@ -618,9 +583,9 @@ function createCustomHotspot(hotSpotDiv, args) {
       
       <!-- Loading Overlay -->
       {#if isLoading}
-        <div class="absolute inset-0 flex items-center justify-center z-50" style="background: rgba(0,0,0,0.95);">
-          <div class="text-center max-w-md mx-auto px-6">
-            <div class="relative w-20 h-20 mx-auto mb-8">
+        <div class="absolute inset-0 flex items-center justify-center z-50 loading-overlay">
+          <div class="text-center max-w-md mx-auto px-4 sm:px-6">
+            <div class="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 sm:mb-8">
               <div class="loader-container">
                 <div class="loader-orbit-1"></div>
                 <div class="loader-orbit-2"></div>
@@ -628,20 +593,20 @@ function createCustomHotspot(hotSpotDiv, args) {
               </div>
             </div>
             
-            <div class="w-full bg-gray-800 rounded-full h-3 mb-6 overflow-hidden">
+            <div class="w-full bg-gray-800 rounded-full h-2 sm:h-3 mb-4 sm:mb-6 overflow-hidden">
               <div 
                 class="h-full rounded-full transition-all duration-500 ease-out"
                 style="width: {loadingProgress}%; background: linear-gradient(to right, #56AAB7, #4a9aa6);"
               ></div>
             </div>
             
-            <h3 class="text-xl font-bold text-white font-roboto-condensed mb-2">
-              Initializing Professional 360° Viewer
+            <h3 class="text-lg sm:text-xl font-bold text-white font-roboto-condensed mb-2">
+              Initializing 360° Viewer
             </h3>
-            <p class="text-gray-300 text-sm font-roboto mb-4">
-              Loading Pannellum WebGL renderer...
+            <p class="text-gray-300 text-xs sm:text-sm font-roboto mb-3 sm:mb-4">
+              Loading panoramic content...
             </p>
-            <p class="text-lg font-bold font-chivo-mono" style="color: #56AAB7;">
+            <p class="text-base sm:text-lg font-bold font-chivo-mono" style="color: #56AAB7;">
               {Math.round(loadingProgress)}%
             </p>
             
@@ -650,7 +615,7 @@ function createCustomHotspot(hotSpotDiv, args) {
                 cleanup();
                 isPanoramicMode = false;
               }}
-              class="mt-6 text-gray-400 hover:text-white text-sm font-roboto underline transition-colors duration-300"
+              class="mt-4 sm:mt-6 text-gray-400 hover:text-white text-xs sm:text-sm font-roboto underline transition-colors duration-300"
             >
               Cancel Loading
             </button>
@@ -660,27 +625,27 @@ function createCustomHotspot(hotSpotDiv, args) {
       
       <!-- Error State -->
       {#if error}
-        <div class="absolute inset-0 flex items-center justify-center z-50" style="background: rgba(0,0,0,0.95);">
-          <div class="text-center max-w-lg mx-auto px-6">
-            <div class="text-red-400 mb-6">
-              <AlertTriangle size={56} class="mx-auto" />
+        <div class="absolute inset-0 flex items-center justify-center z-50 error-overlay">
+          <div class="text-center max-w-lg mx-auto px-4 sm:px-6">
+            <div class="text-red-400 mb-4 sm:mb-6">
+              <AlertTriangle size={isMobile ? 40 : 56} class="mx-auto" />
             </div>
-            <h3 class="text-xl font-bold text-red-400 font-roboto-condensed mb-3">
-              Panorama Loading Failed
+            <h3 class="text-lg sm:text-xl font-bold text-red-400 font-roboto-condensed mb-2 sm:mb-3">
+              Loading Failed
             </h3>
-            <p class="text-red-300 font-roboto mb-4 text-sm leading-relaxed">
+            <p class="text-red-300 font-roboto mb-3 sm:mb-4 text-xs sm:text-sm leading-relaxed">
               {error}
             </p>
             
-            <div class="flex gap-3 justify-center">
+            <div class="flex gap-2 sm:gap-3 justify-center">
               <button 
                 on:click={() => {
                   cleanup();
                   isPanoramicMode = false;
                 }}
-                class="bg-gray-600 hover:bg-gray-500 text-white px-6 py-3 rounded-full transition-all duration-300 text-sm font-medium"
+                class="bg-gray-600 hover:bg-gray-500 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm font-medium"
               >
-                Back to Thumbnail
+                Back
               </button>
               <button 
                 on:click={() => { 
@@ -688,18 +653,113 @@ function createCustomHotspot(hotSpotDiv, args) {
                   loadingProgress = 0;
                   initPannellum();
                 }}
-                class="text-white px-6 py-3 rounded-full transition-all duration-300 text-sm font-medium"
+                class="text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full transition-all duration-300 text-xs sm:text-sm font-medium"
                 style="background: linear-gradient(to right, #56AAB7, #4a9aa6);"
               >
-                Retry Loading
+                Retry
               </button>
             </div>
           </div>
         </div>
       {/if}
       
-      <!-- Enhanced Controls -->
-      {#if !isLoading && !error && showControls}
+      <!-- Mobile Controls -->
+      {#if !isLoading && !error && showControls && isMobile}
+        <!-- Mobile Control Bar -->
+        <div class="absolute top-2 left-2 right-2 flex justify-between items-center z-50">
+          <button 
+            on:click={() => {
+              cleanup();
+              isPanoramicMode = false;
+            }}
+            class="control-btn-mobile"
+            title="Exit"
+          >
+            <X size={20} />
+          </button>
+
+          <div class="flex gap-2">
+            <button 
+              on:click={resetView}
+              class="control-btn-mobile"
+              title="Reset"
+            >
+              <RotateCcw size={20} />
+            </button>
+            
+            <button 
+              on:click={toggleMobileMenu}
+              class="control-btn-mobile"
+              title="Menu"
+            >
+              <Menu size={20} />
+            </button>
+          </div>
+        </div>
+
+        <!-- Mobile Scene Menu -->
+        {#if mobileMenuOpen}
+          <div class="absolute inset-0 bg-black bg-opacity-90 z-40 flex items-center justify-center" on:click={toggleMobileMenu}>
+            <div class="glass-panel p-6 m-4 max-w-sm w-full max-h-[80vh] overflow-y-auto" on:click|stopPropagation>
+              <div class="flex justify-between items-center mb-4">
+                <h3 class="text-white font-bold text-lg">Navigate Scenes</h3>
+                <button on:click={toggleMobileMenu} class="text-white">
+                  <X size={24} />
+                </button>
+              </div>
+              
+              <div class="mb-4">
+                <p class="text-xs text-gray-400 mb-1">Current Scene</p>
+                <p class="text-white font-bold">{sceneNames[currentScene] || currentScene}</p>
+              </div>
+              
+              {#if availableScenes.length > 0}
+                <div class="space-y-2">
+                  {#each availableScenes as sceneName}
+                    <button
+                      on:click={() => navigateToScene(sceneName)}
+                      class="w-full text-left px-4 py-3 rounded-lg bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-all"
+                    >
+                      {sceneNames[sceneName] || sceneName}
+                    </button>
+                  {/each}
+                </div>
+              {/if}
+              
+              <!-- Mobile Settings -->
+              <div class="mt-6 pt-6 border-t border-gray-600 space-y-3">
+                <button 
+                  on:click={() => { toggleHotspots(); toggleMobileMenu(); }}
+                  class="w-full flex items-center justify-between px-4 py-2 rounded-lg bg-white bg-opacity-10 text-white"
+                >
+                  <span>Hotspots</span>
+                  <Eye size={18} class={showHotspots ? "" : "opacity-50"} />
+                </button>
+                
+                <button 
+                  on:click={() => { toggleFullscreen(); toggleMobileMenu(); }}
+                  class="w-full flex items-center justify-between px-4 py-2 rounded-lg bg-white bg-opacity-10 text-white"
+                >
+                  <span>Fullscreen</span>
+                  <Maximize size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+        {/if}
+        
+        <!-- Mobile Zoom Controls -->
+        <div class="absolute bottom-4 right-4 flex flex-col gap-2 z-50">
+          <button on:click={zoomIn} class="control-btn-mobile" title="Zoom in">
+            <ZoomIn size={20} />
+          </button>
+          <button on:click={zoomOut} class="control-btn-mobile" title="Zoom out">
+            <ZoomOut size={20} />
+          </button>
+        </div>
+        
+      <!-- Desktop Controls -->
+      {:else if !isLoading && !error && showControls && !isMobile}
         <!-- Master Control Toggle Button -->
         <div class="absolute top-4 right-1/2 transform translate-x-1/2 z-50">
           <button 
@@ -712,7 +772,6 @@ function createCustomHotspot(hotSpotDiv, args) {
               this={showAllControls ? ToggleRight : ToggleLeft} 
               size={18} 
             />
-            
           </button>
         </div>
 
@@ -758,7 +817,6 @@ function createCustomHotspot(hotSpotDiv, args) {
                 <Maximize size={18} />
               {/if}
             </button>
-            
           </div>
 
           <!-- Zoom Controls -->
@@ -771,8 +829,8 @@ function createCustomHotspot(hotSpotDiv, args) {
             </button>
           </div>
           
-          <!-- Combined Scene Navigation & Current Scene Info -->
-          <div class="absolute bottom-4 right-4 z-50 control-group hidden sm:flex">
+          <!-- Scene Navigation -->
+          <div class="absolute bottom-4 right-4 z-50 control-group">
             <div class="glass-panel p-4 max-w-md">
               <div class="flex items-center gap-3 text-white text-sm mb-2">
                 <div class="text-start">
@@ -794,7 +852,6 @@ function createCustomHotspot(hotSpotDiv, args) {
                         class="w-full text-xs px-3 py-2 rounded-lg transition-all duration-300 text-left scene-btn flex items-center justify-between"
                       >
                         <span>{sceneNames[sceneName] || sceneName}</span>
-
                       </button>
                     {/each}
                   </div>
@@ -803,22 +860,37 @@ function createCustomHotspot(hotSpotDiv, args) {
             </div>
           </div>
         {/if}
-        
-        <!-- Fullscreen indicator -->
-        {#if isFullscreen}
-          <div class="absolute top-4 left-1/2 transform -translate-x-1/2 glass-panel px-4 py-2 z-50">
-            <div class="flex items-center gap-2 text-white text-sm font-roboto-condensed">
-              <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-              PROFESSIONAL 360° MODE
-            </div>
+      {/if}
+      
+      <!-- Fullscreen indicator -->
+      {#if isFullscreen}
+        <div class="absolute top-4 left-1/2 transform -translate-x-1/2 glass-panel px-4 py-2 z-50">
+          <div class="flex items-center gap-2 text-white text-sm font-roboto-condensed">
+            <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+            PROFESSIONAL 360° MODE
           </div>
-        {/if}
+        </div>
       {/if}
     </div>
   {/if}
 </div>
 
 <style>
+  /* Responsive viewer height */
+  .mobile-viewer {
+    aspect-ratio: 16 / 10;
+  }
+
+  .desktop-viewer {
+    aspect-ratio: 16 / 9;
+  }
+
+  @media (max-width: 640px) {
+    .mobile-viewer {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
   .fullscreen {
     position: fixed !important;
     top: 0 !important;
@@ -829,9 +901,22 @@ function createCustomHotspot(hotSpotDiv, args) {
     border-radius: 0 !important;
   }
 
+  .overlay-gradient {
+    background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.4) 40%, transparent 100%);
+  }
+
+  .loading-overlay {
+    background: rgba(0,0,0,0.95);
+  }
+
+  .error-overlay {
+    background: rgba(0,0,0,0.95);
+  }
+
   .glass-panel {
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.15);
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -840,6 +925,7 @@ function createCustomHotspot(hotSpotDiv, args) {
   .control-btn {
     background: rgba(0, 0, 0, 0.7);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     color: white;
     padding: 12px;
     border-radius: 50%;
@@ -852,6 +938,23 @@ function createCustomHotspot(hotSpotDiv, args) {
     background: rgba(0, 0, 0, 0.9);
     transform: scale(1.1);
     box-shadow: 0 6px 24px rgba(86, 170, 183, 0.4);
+  }
+
+  .control-btn-mobile {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+
+  .control-btn-mobile:active {
+    transform: scale(0.95);
+    background: rgba(86, 170, 183, 0.5);
   }
 
   .control-btn.active {
@@ -893,14 +996,14 @@ function createCustomHotspot(hotSpotDiv, args) {
 
   .loader-container {
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 100%;
+    height: 100%;
   }
 
   .loader-orbit-1 {
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 100%;
+    height: 100%;
     border: 3px solid transparent;
     border-top: 3px solid #56AAB7;
     border-radius: 50%;
@@ -909,10 +1012,10 @@ function createCustomHotspot(hotSpotDiv, args) {
 
   .loader-orbit-2 {
     position: absolute;
-    top: 10px;
-    left: 10px;
-    width: 60px;
-    height: 60px;
+    top: 12.5%;
+    left: 12.5%;
+    width: 75%;
+    height: 75%;
     border: 2px solid transparent;
     border-right: 2px solid #4a9aa6;
     border-radius: 50%;
@@ -921,10 +1024,10 @@ function createCustomHotspot(hotSpotDiv, args) {
 
   .loader-core {
     position: absolute;
-    top: 30px;
-    left: 30px;
-    width: 20px;
-    height: 20px;
+    top: 37.5%;
+    left: 37.5%;
+    width: 25%;
+    height: 25%;
     background: linear-gradient(45deg, #56AAB7, #4a9aa6);
     border-radius: 50%;
     animation: pulse 2s ease-in-out infinite;
@@ -946,17 +1049,6 @@ function createCustomHotspot(hotSpotDiv, args) {
     }
   }
 
-  /* Mobile responsive */
-  @media (max-width: 768px) {
-    .control-btn {
-      padding: 8px;
-    }
-    
-    .glass-panel {
-      backdrop-filter: blur(10px);
-    }
-  }
-
   /* Reduced motion support */
   @media (prefers-reduced-motion: reduce) {
     .loader-orbit-1, .loader-orbit-2, .loader-core { 
@@ -969,4 +1061,4 @@ function createCustomHotspot(hotSpotDiv, args) {
       transition-duration: 0.01ms !important;
     }
   }
-</style>  
+</style>
