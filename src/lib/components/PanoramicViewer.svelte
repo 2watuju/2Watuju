@@ -43,8 +43,9 @@
   let windowWidth;
 
   // Pannellum viewer instance
-  let viewer = null;
-  let pannellumLoaded = false;
+let viewer = null;
+let pannellumLoaded = false;
+const panoramaImageCache = new Map();
 
   // Helper function to resolve image paths
   const resolveImagePath = (imagePath) => {
@@ -196,6 +197,57 @@
     return hotspots.filter(hotspot => hotspot.scene === sceneKey);
   };
 
+  const preloadPanoramicImages = async (sceneEntries) => {
+    const total = sceneEntries.length;
+    if (total === 0) return;
+
+    let loadedCount = 0;
+
+    const updateProgress = () => {
+      const baseProgress = 10;
+      const span = 40;
+      loadingProgress = baseProgress + Math.round((loadedCount / total) * span);
+    };
+
+    const loadImage = (sceneKey, imageUrl) => {
+      return new Promise((resolve, reject) => {
+        if (!imageUrl) {
+          loadedCount += 1;
+          updateProgress();
+          return resolve();
+        }
+
+        if (panoramaImageCache.has(imageUrl)) {
+          loadedCount += 1;
+          updateProgress();
+          return resolve();
+        }
+
+        const img = new Image();
+        img.onload = () => {
+          panoramaImageCache.set(imageUrl, true);
+          loadedCount += 1;
+          updateProgress();
+          resolve();
+        };
+
+        img.onerror = () => {
+          reject(new Error(`Failed to preload scene "${sceneKey}".`));
+        };
+
+        img.src = imageUrl;
+
+        if (img.complete && img.naturalWidth > 0) {
+          img.onload();
+        }
+      });
+    };
+
+    for (const [sceneKey, imageUrl] of sceneEntries) {
+      await loadImage(sceneKey, imageUrl);
+    }
+  };
+
   // Initialize Pannellum viewer
   const initPannellum = async () => {
     try {
@@ -207,15 +259,19 @@
       await loadPannellum();
       loadingProgress = 40;
 
-      // Create scenes configuration
-      const scenes = {};
-      const sceneKeys = Object.keys(resolvedPanoramicData);
-      
-      if (sceneKeys.length === 0) {
+      const sceneEntries = Object.entries(resolvedPanoramicData);
+      if (sceneEntries.length === 0) {
         throw new Error('No panoramic scenes available');
       }
 
-      for (const [sceneKey, imageUrl] of Object.entries(resolvedPanoramicData)) {
+      await preloadPanoramicImages(sceneEntries);
+      loadingProgress = Math.max(60, loadingProgress);
+
+      // Create scenes configuration
+      const scenes = {};
+      const sceneKeys = Object.keys(resolvedPanoramicData);
+
+      for (const [sceneKey, imageUrl] of sceneEntries) {
         const sceneHotspots = getHotspotsForScene(sceneKey);
         
         const pannellumHotspots = showHotspots ? sceneHotspots.map((hotspot, index) => {
@@ -250,14 +306,14 @@
         };
       }
 
-      loadingProgress = 70;
+      loadingProgress = Math.max(70, loadingProgress + 5);
 
       // Ensure currentScene exists
       if (!scenes[currentScene]) {
         currentScene = sceneKeys[0];
       }
 
-      loadingProgress = 80;
+      loadingProgress = Math.max(85, loadingProgress + 5);
 
       // Clear container
       if (pannellumContainer) {
@@ -296,7 +352,7 @@
           error = 'Load timeout: The panoramic viewer took too long to initialize. Please check your internet connection and try again.';
           isLoading = false;
         }
-      }, 15000);
+      }, 20000);
 
       viewer = window.pannellum.viewer(pannellumContainer, config);
 
