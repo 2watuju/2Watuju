@@ -377,6 +377,9 @@ const panoramaImageCache = new Map();
         clearTimeout(loadTimeout);
         loadingProgress = 100;
         isLoading = false;
+        if (!isMobile) {
+          showAllControls = true;
+        }
         try {
           viewer.resize();
         } catch (resizeErr) {
@@ -783,10 +786,10 @@ const panoramaImageCache = new Map();
 
         <!-- Mobile Scene Menu -->
         {#if mobileMenuOpen}
-          <div class="absolute inset-0 bg-black bg-opacity-90 z-40 flex items-center justify-center" on:click={toggleMobileMenu}>
-            <div class="glass-panel p-6 m-4 max-w-sm w-full max-h-[80vh] overflow-y-auto" on:click|stopPropagation>
+          <div class="absolute inset-0 bg-black/80 z-40 flex items-end sm:items-center justify-center px-4 pb-6" on:click={toggleMobileMenu}>
+            <div class="glass-panel w-full max-w-xs sm:max-w-sm rounded-2xl p-5 sm:p-6 max-h-[70vh] overflow-y-auto" on:click|stopPropagation>
               <div class="flex justify-between items-center mb-4">
-                <h3 class="text-white font-bold text-lg">Navigate Scenes</h3>
+                <h3 class="text-white font-bold text-base sm:text-lg">Navigate Scenes</h3>
                 <button on:click={toggleMobileMenu} class="text-white">
                   <X size={24} />
                 </button>
@@ -802,7 +805,7 @@ const panoramaImageCache = new Map();
                   {#each availableScenes as sceneName}
                     <button
                       on:click={() => navigateToScene(sceneName)}
-                      class="w-full text-left px-4 py-3 rounded-lg bg-white bg-opacity-10 text-white hover:bg-opacity-20 transition-all"
+                      class="w-full text-left px-4 py-2.5 rounded-lg bg-white/10 text-white hover:bg-white/20 transition-all text-sm"
                     >
                       {sceneNames[sceneName] || sceneName}
                     </button>
@@ -811,10 +814,10 @@ const panoramaImageCache = new Map();
               {/if}
               
               <!-- Mobile Settings -->
-              <div class="mt-6 pt-6 border-t border-gray-600 space-y-3">
+              <div class="mt-5 pt-5 border-t border-gray-700 space-y-3">
                 <button 
                   on:click={() => { toggleHotspots(); toggleMobileMenu(); }}
-                  class="w-full flex items-center justify-between px-4 py-2 rounded-lg bg-white bg-opacity-10 text-white"
+                  class="w-full flex items-center justify-between px-4 py-2 rounded-lg bg-white/10 text-white"
                 >
                   <span>Hotspots</span>
                   <Eye size={18} class={showHotspots ? "" : "opacity-50"} />
@@ -822,7 +825,7 @@ const panoramaImageCache = new Map();
                 
                 <button 
                   on:click={() => { toggleFullscreen(); toggleMobileMenu(); }}
-                  class="w-full flex items-center justify-between px-4 py-2 rounded-lg bg-white bg-opacity-10 text-white"
+                  class="w-full flex items-center justify-between px-4 py-2 rounded-lg bg-white/10 text-white"
                 >
                   <span>Fullscreen</span>
                   <Maximize size={18} />
