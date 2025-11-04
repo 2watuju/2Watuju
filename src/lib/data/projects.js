@@ -50,8 +50,8 @@ export const projects = [
       }
     ],
     "panoramic": {
-      "scene1": "https://raw.githubusercontent.com/dafahan/2Watuju/9ff39b3876143dc036c8f8f36121f057dd1fe1ec/static/assets/panorama/Fin%20H/Panorama_R.DR%20FIN%201%20(1)2_2025-07-26-15-44-36.webp",
-      "scene2": "https://raw.githubusercontent.com/dafahan/2Watuju/9ff39b3876143dc036c8f8f36121f057dd1fe1ec/static/assets/panorama/Fin%20H/Panorama_R.DR%20FIN%201%20(1)2_2025-07-26-16-12-06.webp"
+      "scene1": "https://raw.githubusercontent.com/2watuju/2Watuju/9ff39b3876143dc036c8f8f36121f057dd1fe1ec/static/assets/panorama/Fin%20H/Panorama_R.DR%20FIN%201%20(1)2_2025-07-26-15-44-36.webp",
+      "scene2": "https://raw.githubusercontent.com/2watuju/2Watuju/9ff39b3876143dc036c8f8f36121f057dd1fe1ec/static/assets/panorama/Fin%20H/Panorama_R.DR%20FIN%201%20(1)2_2025-07-26-16-12-06.webp"
     },
     "hotspots": [
       {
@@ -1107,8 +1107,8 @@ export const projects = [
       }
     ],
     "panoramic": {
-      "scene1": "https://raw.githubusercontent.com/dafahan/2Watuju/refs/heads/main/static/assets/panorama/Dahlia/Panorama_RDH%20v2_2025-08-04-10-45-26.webp",
-      "scene2": "https://raw.githubusercontent.com/dafahan/2Watuju/refs/heads/main/static/assets/panorama/Dahlia/Panorama_RDH%20v2_2025-08-04-11-03-52.webp"
+      "scene1": "https://raw.githubusercontent.com/2watuju/2Watuju/refs/heads/main/static/assets/panorama/Dahlia/Panorama_RDH%20v2_2025-08-04-10-45-26.webp",
+      "scene2": "https://raw.githubusercontent.com/2watuju/2Watuju/refs/heads/main/static/assets/panorama/Dahlia/Panorama_RDH%20v2_2025-08-04-11-03-52.webp"
     }
   }
 ];
