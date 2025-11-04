@@ -1021,7 +1021,7 @@
   const downloadProjects = () => {
     const dataStr = `// src/lib/data/projects.js
 
-const BASE_URL = 'https://dafahan.github.io/2Watuju';
+const BASE_URL = 'https://2watuju.com';
 
 export const projects = ${JSON.stringify(projects, null, 2)};
 

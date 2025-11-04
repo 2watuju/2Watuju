@@ -1,5 +1,5 @@
 // src/lib/data/category-projects.js
-const BASE_URL = 'https://dafahan.github.io/2Watuju';
+const BASE_URL = 'https://2watuju.com';
 
 export const projectCategories = [
   {
